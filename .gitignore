@@ -1,2 +1,6 @@
 *.pyc
 app/*.pyc
+project/*.pyc
+project/__pycache__/
+app/migrations/__pycache__/
+app/__pycache__/
