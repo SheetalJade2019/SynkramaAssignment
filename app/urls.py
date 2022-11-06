@@ -17,5 +17,9 @@ from django.contrib import admin
 from django.urls import path, include
 from .views import *
 urlpatterns = [
-    path("home",home, name="home"),
+    path("register_user",register_user, name="register_user"),
+    path("login_request",login_request,name="login_request"),
+    path("student_list",student_list,name="student_list"),
+    path("delete_student",delete_student,name="delete_student"),
+    path("update_student",update_student,name="update_student")
 ]
