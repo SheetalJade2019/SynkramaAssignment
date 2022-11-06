@@ -6,6 +6,9 @@ from app.models import User
 from django.contrib.auth import authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from app.serializers import *
+# import django.contrib.auth.context_processors.csrf
+from django.template.context_processors import csrf
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 """
@@ -26,6 +29,8 @@ def register_user(request):
 
         if not username or not password or not email:
             return Response({"mesg":"Please Enter all details"},status=status.HTTP_400_BAD_REQUEST) 
+        if User.objects.filter(email=email).exists():
+            return Response({"mesg":"Email Already exists"},status=status.HTTP_400_BAD_REQUEST) 
 
         user = User.objects.create(username=username,email=email,first_name=first_name,last_name=last_name,phone=phone,address=address, is_admin=is_admin)
                 # password = uuid.uuid4() #create seed password
@@ -125,6 +130,7 @@ def delete_student(request):
         )  
         return Response({"msg":"Something went wrong"},status=500)
 
+# @login_required
 @api_view(['GET'])
 def student_list(request):
     try:
@@ -135,8 +141,9 @@ def student_list(request):
         from django.core.paginator import Paginator
         # p = Paginator(user,max_rows)
         # user = p.page(1)
-
-        print(user.data)
+        # print(request.user.User_ID)
+        # u = User.objects.get(username=request.user)
+        # print(u.email)
         return Response({"users":user.data,"msg":"Success"},status=status.HTTP_200_OK)
 
     except Exception as e:
