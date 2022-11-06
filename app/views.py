@@ -79,7 +79,7 @@ def login_request(request):
 def update_student(request):
     try:
         print("data ",request.data)
-        user_id = request.GET.get("User_ID",None)
+        user_id = request.GET.get("user_id",None)
         User_ID = request.data.get("User_ID",None)
         first_name = request.data.get('first_name',None)
         last_name = request.data.get('last_name',None)
@@ -94,10 +94,12 @@ def update_student(request):
         # if not username or not password or not email:
             # return Response({"mesg":"Please Enter all details"},status=status.HTTP_400_BAD_REQUEST) 
 
-        user = User.objects.get(User_ID=User_ID)
+        user = User.objects.get(User_ID=int(User_ID))
         if not int(user.session_token):
             return Response({"msg":"Please Login"},status=403)
-        if is_admin or user_id == user.User_ID:
+        print(int(user_id) == user.User_ID,user.User_ID,user_id,is_admin)
+        if is_admin: 
+            print("admin", type(is_admin))
             if first_name:
                 user.first_name=first_name
             if last_name:
@@ -110,7 +112,22 @@ def update_student(request):
                 user.phone=phone
             user.save()
             return Response({"msg":"Student Updated"},status=status.HTTP_200_OK)
-        return Response({"msg":"You are not authorized"},status=403)
+        elif int(user_id) == user.User_ID:
+            print("reg")
+            if first_name:
+                user.first_name=first_name
+            if last_name:
+                user.last_name=last_name
+            if password:
+                user.set_password(password)
+            if address:
+                user.address=address
+            if phone:
+                user.phone=phone
+            user.save()
+            return Response({"msg":"Student Updated"},status=status.HTTP_200_OK)
+        else:
+            return Response({"msg":"You are not authorized"},status=403)
 
     except Exception as e:
         print(e)
