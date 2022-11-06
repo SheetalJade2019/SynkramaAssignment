@@ -107,6 +107,7 @@ def update_student(request):
             if password:
                 user.set_password(password)
             if address:
+                print()
                 user.address=address
             if phone:
                 user.phone=phone
